@@ -42,6 +42,7 @@ class Survey::Attempt < ActiveRecord::Base
 
   validate :check_number_of_attempts_by_survey
   before_create :collect_scores
+  before_create :collect_winners
 
   def correct_answers
     self.answers.where(:correct => true)
@@ -68,4 +69,10 @@ class Survey::Attempt < ActiveRecord::Base
   def collect_scores
     self.score = self.answers.map(&:value).reduce(:+)
   end
+
+  def collect_winners
+    # Find if at least one incorrect answer with 0 score has been answered
+    # Or may be we should add a killer field to the de questión and so to the answers, so we could check this one=?
+  end
+
 end

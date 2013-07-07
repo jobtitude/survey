@@ -19,7 +19,11 @@ class Survey::Answer < ActiveRecord::Base
   end
 
   def correct?
-    self.correct or self.option.correct?
+    unless self.option == nil
+      self.correct or self.option.correct?
+    else
+      Survey::Option.find(option_id).correct?
+    end
   end
 
   private
@@ -27,6 +31,8 @@ class Survey::Answer < ActiveRecord::Base
   def characterize_answer
     if option.correct?
       self.correct = true
+    else
+      self.correct = false
     end
   end
 
