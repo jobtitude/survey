@@ -41,6 +41,7 @@ class Survey::Attempt < ActiveRecord::Base
   # callbacks
 
   validate :check_number_of_attempts_by_survey
+  validate :check_number_of_answers
   before_create :collect_scores
   before_create :collect_winners
 
@@ -66,11 +67,23 @@ class Survey::Attempt < ActiveRecord::Base
     end
   end
 
+  def check_number_of_answers
+    debugger
+    if self.answers.size == self.survey.questions.size
+      return true
+    else
+      return false
+    end
+  end
+
   def collect_scores
     self.score = self.answers.map(&:value).reduce(:+)
   end
 
   def collect_winners
+
+    # Is there on answers with 0 score?
+    killer = self.answers.map(&:value).reduce(:*)
     # Find if at least one incorrect answer with 0 score has been answered
     # Or may be we should add a killer field to the de questión and so to the answers, so we could check this one=?
   end
